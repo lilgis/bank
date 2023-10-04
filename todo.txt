@@ -1,0 +1,21 @@
+to do:
+make webpage more interesting
+develop actual site, add the money thing
+make webpage public
+add logout button
+
+-add session
+-close session
+make user object?
+make it so if you try to type in auth.php link without any information that it will kick you out
+
+sanitize input - only x ascii range
+hash info
+-make it so that users cant just change the link and access random things
+-?ensure session security, still vulnerable to session hijacking
+send balance from auth.php to mysite.php with aes
+change perms on files accordingly
+validate data so user cant just add money to account
+
+
+
