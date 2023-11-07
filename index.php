@@ -6,7 +6,7 @@ if(!isset($_SESSION["valid"])){
     $_SERVER["valid"]= false;
 }else{
     if($_SESSION["ip"]==getenv("REMOTE_ADDR")){
-        header('Location: MySite.php');
+        header('Location: home.php');
     }
 }
 ?>
@@ -23,6 +23,8 @@ if(!isset($_SESSION["valid"])){
                     echo("<p>Invalid username or password</p>");
                 }elseif($_GET['error']==2){
                     echo("<p>Username is already taken</p>");
+                }elseif($_GET['error']==3){
+                    echo("<p>Make password shorter</p>");
                 }
             }
         ?>
@@ -48,7 +50,7 @@ if(!isset($_SESSION["valid"])){
     <input type="text" id="username" name="username" required><br><br>
     <label for="password">Password:</label>
     <input type="password" id="password" name="password" required><br><br>
-    <input type="hidden" id="create" name="create" value="true"><!--test to see if works-->
+    <input type="hidden" id="create" name="create" value="true">
     <input type="submit" value="Create">
     </form>
 </div>

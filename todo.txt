@@ -1,21 +1,25 @@
+THIS PAGE CAN BE ACCESSED FROM BROWSER
 to do:
 make webpage more interesting
-develop actual site, add the money thing
 make webpage public
-add logout button
 
--add session
--close session
-make user object?
-make it so if you try to type in auth.php link without any information that it will kick you out
+make it so that you cant type todo.txt or users.sql in search bar
+get security certificate make HTTPS
 
-sanitize input - only x ascii range
+(1/2)sanitize input - only x ascii range
 hash info
--make it so that users cant just change the link and access random things
 -?ensure session security, still vulnerable to session hijacking
-send balance from auth.php to mysite.php with aes
 change perms on files accordingly
-validate data so user cant just add money to account
+make it so that you can't just steal money by requesting money
+hide php?
+test input on index.php
+
+
+-add page with current essays and docs
+
+potentially randomize document names and add a new column to sql with what the user chooses to name the doc as
+
+create a new doc doesnt work 
 
 
 

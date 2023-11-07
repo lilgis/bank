@@ -1,3 +1,5 @@
+
+
 <?php
 session_start();
 //$IP = getenv ( "REMOTE_ADDR" );
@@ -27,6 +29,11 @@ function userExists($db, $username){
         }
     }
 }
+function hashPass($password){
+    // $options = ['cost'=>12,];
+     $hashed =  hash('sha256', $password);
+     return $hashed;
+ }
 
 function retPass($db, $username){
     $results = returnDb($db);
@@ -45,7 +52,10 @@ function addUser($username, $password, $db){
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Get user input
     $username = $_POST["username"];
-    $password = $_POST["password"];
+    $password = hashPass($_POST["password"]);
+    if(strlen($password)>70){
+        header('Location: index.php?error=3');
+    }
     $type = $_POST["create"];
 
     userExists($db, $username);
@@ -55,7 +65,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if($type=="true"){
         if(userExists($db, $username)==false){
             addUser($username, $password, $db);
-            header("Location: MySite.php");
+            header("Location: home.php");
         }else{
             header('Location: index.php?error=2'); 
         }
@@ -65,7 +75,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $_SESSION["username"]=$username;
             $_SESSION["ip"]=getenv("REMOTE_ADDR");
             //post balance
-            header("Location: MySite.php");
+            header("Location: home.php");
             exit();
        }else{
             header('Location: index.php?error=1');
