@@ -7,19 +7,16 @@ make it so that you cant type todo.txt or users.sql in search bar
 get security certificate make HTTPS
 
 (1/2)sanitize input - only x ascii range
-hash info
 -?ensure session security, still vulnerable to session hijacking
 change perms on files accordingly
 make it so that you can't just steal money by requesting money
-hide php?
 test input on index.php
 
+sanitize input on document.php and newdoc.php
+add a function to check if file already exists
+add a delete file button
 
--add page with current essays and docs
-
-potentially randomize document names and add a new column to sql with what the user chooses to name the doc as
-
-create a new doc doesnt work 
+troubles creating a new account
 
 
 

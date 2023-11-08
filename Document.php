@@ -14,21 +14,8 @@ class MyDB extends SQLite3 {
  }
  $db = new MyDB();
 
-if(isset($_POST["saveButton"])){
-    $location = $_GET["file"];//could also call the ifset get file below
-    $projName = $_POST["docName"];
-    $myfile = fopen($location, "w") or die("Unable to save file!");
-    $data = $_POST["text"];
-    fwrite($myfile, $data);
-    fclose($myfile);
-    updateName($db, $location, $projName);
-    //echo("saved");
-}
-function returntb1($db){
-    $results = $db->query('SELECT * FROM tb1');//stores query in assoc array
-    return $results;
-}
-function retUid($db, $username){
+
+ function retUid($db, $username){
     $results = returntb1($db);
     while ($row = $results->fetchArray()) {//for each row
         if($row['uname']==$username){
@@ -37,15 +24,26 @@ function retUid($db, $username){
     }
 }
 
+function returntb1($db){
+    $results = $db->query('SELECT * FROM tb1');//stores query in assoc array
+    return $results;
+}
+
+function addFile($db, $uid, $location, $projName){//adds file to db if it doesn't already exist
+    $query = "insert into udata (user, contentLocation, projName) values ('".$uid."', '".$location."', '".$projName."')";
+    $db->exec($query);
+}
+
 function hasAccess($db, $uid, $location){//checks if location of doc is associated with user id
-    $results = $db->query('SELECT * FROM udata');
+    $results = $db->query("SELECT * FROM udata WHERE user = \"".$uid."\";");
     while ($row = $results->fetchArray()) {//for each row
-        if($row['contentLocation']==$location && $row['user']==$uid){
+        if($row['contentLocation']==$location){
             return true;
         }
     }
     return false;
 }
+
 function retProjName($db, $location){
     $results = $db->query('SELECT * FROM udata');
     while ($row = $results->fetchArray()) {//for each row
@@ -59,39 +57,46 @@ function updateName($db, $location, $projName){
     $query = "UPDATE udata set projName=\"".$projName."\" where contentLocation = \"".$location."\";";
     $db->exec($query);
 }
-// function retProjName($db, $location){
-//     $results = $db->query("SELECT projName FROM udata where contentLocation = \"".$location."\"");//stores query in assoc array
-//     return $results;
-// }
-// function closeF($myfile){
-//     //sanitize
-//     //save
-//     echo("saved");
-//     fclose($myfile);
-// }
 
 $username = $_SESSION["username"];
 $uid = retUid($db, $username);
+$disabled = "";
 
-if(isset($_GET["new"])){
-    $location = "projects/".bin2hex(random_bytes(20))."";//unique identifier
-    $hasAccess=true;
-    $myfile = fopen($location, "w");
-    $content = "start typing here";
+if(isset($_POST["saveButton"])){//sanitize
+    $location = $_GET["file"];
+    $projName = $_POST["docName"];
+    $myfile = fopen($location, "w") or die("Unable to save file!");
+    $data = $_POST["text"];
+    fwrite($myfile, $data);
     fclose($myfile);
-}elseif(isset($_GET["file"])){
+    updateName($db, $location, $projName);//if($projName!=retProjName($db, $location)){
+}
+
+if(isset($_POST["newSave"])){
+    $location = $_GET["file"];
+    $projName = $_POST["docName"];
+    $myfile = fopen($location, "w") or die("Unable to save file!");
+    $data = $_POST["text"];
+    fwrite($myfile, $data);
+    fclose($myfile);
+    addFile($db, $uid, $location, $projName);
+}
+
+if(isset($_GET["file"])){
     $location = $_GET["file"];
     if(hasAccess($db, $uid, $location)==true){
         $hasAccess=true;
         $myfile = fopen($location, "r") or die("Unable to open file!");//file
         $content = fread($myfile,filesize($location));//content
+        $projName = retProjName($db, $location);
         fclose($myfile);
     }else{
-        echo("access denied");
+        $projName="Access Denied";
         $content = "";
+        $disabled = "disabled";
     }
 }
-$projName = retProjName($db, $location);
+
 
 ?>
 <!DOCTYPE html>
@@ -136,11 +141,10 @@ $projName = retProjName($db, $location);
         <title><?php echo($projName) ?></title>
     </head>
     <body>
-    <!-- contenteditable="true" -->
-    <form method="post">
+    <form method="post" action="Document.php?file=<?php echo($location)?>">
         <input type="text" id="docName" name="docName" contenteditable="true" value='<?php echo($projName);?>'>
         <textarea name="text" id="doc"><?php echo($content);?></textarea><br><br>
-        <input id="save" type="submit" name="saveButton" value="Save"/>
+        <input id="save" type="submit" name="saveButton" value="Save" <?php echo($disabled); ?>/>
         <a href="/myAccount.php">Quit</a>
     </form> 
     

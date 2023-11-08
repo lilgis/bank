@@ -69,10 +69,10 @@ $projLoc = retProjects($db, $uid);//project file locations
         <ul>
             <?php 
             for ($i = 0; $i < count($projLoc); $i++) {
-                echo("<li><a href='Document.php?file=".$projLoc[$i]."'>".retProjName($db, $projLoc[$i])."</a></li>");//change Project to project name  
+                echo("<li><a href='document.php?file=".$projLoc[$i]."'>".retProjName($db, $projLoc[$i])."</a></li>");//change Project to project name  
               }
             ?>
-            <li><a href="/Document.php?new=true">New Document</a></li>
+            <li><a href="/newDocument.php">New Document</a></li>
         </ul>
 
         <br><br><a href="/myAccount.php" style="text-decoration:none; color:black">Back</a>
